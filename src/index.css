@@ -49,6 +49,6 @@ ol, ul {
   margin-left: 20px;
 }
 
-.current-selected-move {
+.current-selected-move, .winner {
   border: 2px solid #333;
 }
