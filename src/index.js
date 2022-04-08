@@ -35,7 +35,6 @@ class Board extends React.Component {
 		const boardSize = 3
 		let squares = []
 		const winner = this.props.winner
-		console.log(winner)
 
 		for (let i = 0; i < boardSize; i++) {
 			let row = []
@@ -131,10 +130,12 @@ class Game extends React.Component {
 		if (!isAscending) {
 			moves.sort((a,b) => b.key - a.key)
 		}
-
+		console.log(moves.length)
 		let status
 		if (winner) {
 			status = 'Winner: ' + current.squares[winner[0]]
+		} else if (moves.length === 10 && !winner) {
+			status = 'Draw'
 		} else {
 			status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O')
 		}
