@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 import './index.css'
 
 function Square(props) {
@@ -10,10 +10,19 @@ function Square(props) {
 	)
 }
 
+function SortMoves(props) {
+	return (
+		<button onClick={props.onClick} style={{margin: '5px'}}>
+			{props.isAscending ? 'Asc' : 'Desc'}
+		</button>
+	)
+}
+
 class Board extends React.Component {
 	renderSquare(i) {
 		return (
 			<Square
+				key={i}
 				value={this.props.squares[i]}
 				onClick={() => this.props.onClick(i)}
 			/>
@@ -75,6 +84,12 @@ class Game extends React.Component {
 		})
 	}
 
+	handleSort() {
+		this.setState({
+			isAscending: !this.state.isAscending
+		})
+	}
+
 	jumpTo(step) {
 		this.setState({
 			stepNumber: step,
@@ -84,11 +99,9 @@ class Game extends React.Component {
 
 	render() {
 		const history = this.state.history
-		console.log('render ~ history', history)
 		const current = history[this.state.stepNumber]
-		console.log('render ~ current', current)
 		const winner = calculateWinner(current.squares)
-		console.log('render ~ winner', winner)
+		const isAscending = this.state.isAscending
 
 		const moves = history.map((step, move) => {
 			const lastestMoveSquare = step.lastestMoveSquare
@@ -111,6 +124,9 @@ class Game extends React.Component {
 				</li>
 			)
 		})
+		if (!isAscending) {
+			moves.sort((a,b) => b.key - a.key)
+		}
 
 		let status
 		if (winner) {
@@ -130,6 +146,9 @@ class Game extends React.Component {
 				<div className='game-info'>
 					<div>{status}</div>
 					<ol>{moves}</ol>
+				</div>
+				<div>
+					<SortMoves isAscending={this.state.isAscending} onClick={() => this.handleSort()} />
 				</div>
 			</div>
 		)
@@ -156,4 +175,9 @@ function calculateWinner(squares) {
 	return null
 }
 
-ReactDOM.render(<Game />, document.getElementById('root'))
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+		<Game />
+  </React.StrictMode>
+);
